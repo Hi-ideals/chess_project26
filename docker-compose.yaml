@@ -20,15 +20,15 @@ services:
       retries: 10
       start_period: 40s
     networks:
-      - networkName: chess-network
+      - chess-network
   
   tomcat:
     build:
       context: .
-      image: chess-server:latest
+    image: chess-server:latest
     container_name: chess-server
     ports:
-      - "9029:8000"
+      - "9029:8080"
     environment:
       DB_HOST: db
       DB_PORT: 3306
@@ -40,7 +40,7 @@ services:
       db:
         condition: service_healthy
     networks:
-      - networkName: chess-network  
+      - chess-network  
 
 networks:
   chess-network:  
