@@ -1,0 +1,47 @@
+services: 
+  db:
+    image: mysql:5.7
+    container_name: chess-db
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql123
+      MYSQL_DATABASE: db_chess
+      MYSQL_USER: chess
+      MYSQL_PASSWORD: Chessbidar@HitpL2026
+    ports:
+      - "3329:3306"
+    restart: always
+    volumes:
+      - ./db_educare_prod.sql:/docker-entrypoint-initdb.d/db_educare_prod.sql
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/conf.d:/etc/mysql/conf.d
+    healthcheck:
+      test: ["CMD-SHELL", "mysql -u root -pmysql123 -e 'SELECT 1'"]
+      interval: 10s
+      retries: 10
+      start_period: 40s
+    networks:
+      - networkName: chess-network
+  
+  tomcat:
+    build:
+      context: .
+      image: chess-server:latest
+    container_name: chess-server
+    ports:
+      - "9029:8000"
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: db_chess
+      DB_USER: chess
+      DB_PASSWORD: Chessbidar@HitpL2026
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - networkName: chess-network  
+
+networks:
+  chess-network:  
+    driver: bridge  
