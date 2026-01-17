@@ -11,7 +11,7 @@ services:
       - "3329:3306"
     restart: always
     volumes:
-      - ./db_educare_prod.sql:/docker-entrypoint-initdb.d/db_educare_prod.sql
+      - ./chess.sql:/docker-entrypoint-initdb.d/chess.sql
       - ./mysql/data:/var/lib/mysql
       - ./mysql/conf.d:/etc/mysql/conf.d
     healthcheck:
